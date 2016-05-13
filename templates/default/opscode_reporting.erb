@@ -1,0 +1,3 @@
+postgresql['user'] = "<%= node['cf_tiered_chef']['database']['username'] %>"
+postgresql['port'] = <%= node['cf_tiered_chef']['database']['port'] %>
+postgresql['vip'] = "<%= node['cf_tiered_chef']['database']['url'] %>"

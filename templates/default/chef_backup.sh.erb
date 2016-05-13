@@ -1,0 +1,17 @@
+#!/bin/bash
+
+export BACKUP_NAME=backup_$(date +"%d_%b_%y")
+export BACKUP_HOME="<%= node['cf_tiered_chef']['s3']['dir'] %>/backups"
+export CHEF_SERVER="<%= node['cf_tiered_chef']['api_fqdn'] %>"
+
+if [ ! -d "${BACKUP_HOME}" ]; then
+    mkdir -p ${BACKUP_HOME}
+fi
+
+/opt/opscode/embedded/bin/knife ec backup /tmp/backup/ -s https://${CHEF_SERVER} --with-user-sql
+
+tar -czf /${BACKUP_HOME}/${BACKUP_NAME}.tar /tmp/backup/
+
+find ${BACKUP_HOME}/* -mtime +10 -type f -delete
+
+rm -rf /tmp/backup/*

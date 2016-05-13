@@ -1,0 +1,5 @@
+# This file is managed by Chef.  Manual changes may be overwritten.
+127.0.0.1 <%= "#{node['cf_tiered_chef']['backend']['fqdn']} #{node['cf_tiered_chef']['backend']['fqdn'].split('.')[0]}" %> localhost
+::1 localhost6.localdomain6 localhost6
+
+<%= "#{node['cf_tiered_chef']['backend_vip']['ip_address']} #{node['cf_tiered_chef']['backend_vip']['fqdn']} #{node['cf_tiered_chef']['backend_vip']['fqdn'].split('.')[0]}" %>

@@ -1,0 +1,11 @@
+# This file is managed by Chef.  Manual changes may be overwritten.
+<% if node['ipaddress'] == node['cf_tiered_chef']['frontends']['fe01']['ip_address'] -%>
+127.0.0.1 <%= node['cf_tiered_chef']['frontends']['fe01']['fqdn'] %> <%= node['cf_tiered_chef']['frontends']['fe01']['fqdn'].split('.')[0] %> localhost
+<% else -%>
+127.0.0.1 <%= node['cf_tiered_chef']['frontends']['fe02']['fqdn'] %> <%= node['cf_tiered_chef']['frontends']['fe02']['fqdn'].split('.')[0] %> localhost
+<% end -%>
+::1 localhost6.localdomain6 localhost6
+<%= node['cf_tiered_chef']['frontends']['fe01']['ip_address'] %> <%= node['cf_tiered_chef']['frontends']['fe01']['fqdn'] %> <%= node['cf_tiered_chef']['frontends']['fe01']['fqdn'].split('.')[0] %>
+<%= node['cf_tiered_chef']['frontends']['fe02']['ip_address'] %> <%= node['cf_tiered_chef']['frontends']['fe02']['fqdn'] %> <%= node['cf_tiered_chef']['frontends']['fe02']['fqdn'].split('.')[0] %>
+<%= node['cf_tiered_chef']['backend_vip']['ip_address'] %> <%= node['cf_tiered_chef']['backend_vip']['fqdn'] %> <%= node['cf_tiered_chef']['backend_vip']['fqdn'].split('.')[0] %>
+<%= node['cf_tiered_chef']['analytics']['ip_address'] %> <%= node['cf_tiered_chef']['analytics']['fqdn'] %> <%= node['cf_tiered_chef']['analytics']['fqdn'].split('.')[0] %>

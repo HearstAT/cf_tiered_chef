@@ -1,0 +1,59 @@
+topology 'tier'
+notification_email '"Chef Notifications" <chef@chef.<%= node['cf_tiered_chef']['domain'] %>>'
+
+license['nodes'] = <%= node['cf_tiered_chef']['licensecount'] %>
+
+server '<%= node['cf_tiered_chef']['frontends']['fe01']['fqdn'] %>',
+  ipaddress: '<%= node['cf_tiered_chef']['frontends']['fe01']['ip_address'] %>',
+  role: 'frontend'
+
+server '<%= node['cf_tiered_chef']['frontends']['fe02']['fqdn'] %>',
+  ipaddress: '<%= node['cf_tiered_chef']['frontends']['fe02']['ip_address'] %>',
+  role: 'frontend'
+
+server '<%= node['cf_tiered_chef']['backend']['fqdn'] %>',
+  ipaddress: '<%= node['cf_tiered_chef']['backend']['ip_address'] %>',
+  role: 'backend',
+  bootstrap: true
+
+backend_vip '<%= node['cf_tiered_chef']['backend_vip']['fqdn'] %>',
+  ipaddress: '<%= node['cf_tiered_chef']['backend_vip']['ip_address'] %>',
+  device: 'eth0',
+
+api_fqdn '<%= node['cf_tiered_chef']['api_fqdn'] %>'
+
+oc_id['applications'] = {
+  'analytics' => {
+    'api_fqdn' => '<%= node['cf_tiered_chef']['api_fqdn'] %>',
+    'redirect_uri' => 'https://<%= node['cf_tiered_chef']['analytics']['url'] %>/'
+  }
+}
+
+<% if node['cf_tiered_chef']['ssl']['enabled'] == true -%>
+nginx['ssl_certificate'] = '<%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= node['cf_tiered_chef']['prime_domain'] %>.crt'
+nginx['ssl_certificate_key'] = '<%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= node['cf_tiered_chef']['prime_domain'] %>.key'
+<% end -%>
+
+<% if node['cf_tiered_chef']['ssl']['enabled'] == false -%>
+nginx['enable_non_ssl'] = true
+<% end -%>
+
+rabbitmq['vip'] = '<%= node['cf_tiered_chef']['backend_vip']['ip_address'] %>'
+rabbitmq['node_ip_address'] = '0.0.0.0'
+
+<% if node['cf_tiered_chef']['cookbook']['ext_enable'] == true %>
+bookshelf['enable'] = false
+bookshelf['vip'] = "https://s3.amazonaws.com"
+bookshelf['external_url'] = "https://s3.amazonaws.com"
+bookshelf['access_key_id'] = "<%= node['cf_tiered_chef']['aws_access_key_id'] %>"
+bookshelf['secret_access_key'] = "<%= node['cf_tiered_chef']['aws_secret_access_key'] %>"
+opscode_erchef['s3_bucket'] = "<%= node['cf_tiered_chef']['cookbook']['bucket'] %>"
+<% end %>
+
+<% if node['cf_tiered_chef']['database']['ext_enable'] == true %>
+postgresql['external'] = true
+postgresql['db_superuser'] = "<%= node['cf_tiered_chef']['database']['username'] %>"
+postgresql['db_superuser_password'] = "<%= node['cf_tiered_chef']['database']['password'] %>"
+postgresql['port'] = <%= node['cf_tiered_chef']['database']['port'] %>
+postgresql['vip'] = "<%= node['cf_tiered_chef']['database']['url'] %>"
+<% end %>

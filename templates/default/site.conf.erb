@@ -1,0 +1,70 @@
+server {
+  listen 80;
+  server_name <% @subdomains.each do |sub| %> <%= sub %>.<%= @domain %><% end -%>;
+
+  access_log /var/log/opscode/nginx/access.log opscode;
+  root /var/opt/opscode/nginx/html;
+  client_max_body_size 250m;
+
+  proxy_set_header Host $host;
+  proxy_set_header X-Real-IP $remote_addr;
+  proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+  proxy_set_header X-Forwarded-Proto https;
+  proxy_pass_request_headers on;
+  proxy_connect_timeout   1;
+  proxy_send_timeout      300;
+  proxy_read_timeout      300;
+
+  error_page 404 =404 /404.html;
+  error_page 503 =503 /503.json;
+
+  # Whitelist the docs necessary to serve up error pages and friendly
+  # html to non-chef clients hitting this host.
+  location ~ "^/[0-9]{3,3}\.(json|html)|index.html$" {
+  }
+  location "/css/" {
+  }
+  location "/images/" {
+  }
+
+  location /version {
+    types { }
+    default_type text/plain;
+    alias /opt/opscode/version-manifest.txt;
+  }
+
+  # bookshelf
+  location ~ "/bookshelf/{0,1}.*$" {
+    proxy_pass http://bookshelf;
+  }
+
+  # erchef status endpoint
+  location ~ "^/_status/?$" {
+    types { }
+    default_type application/json;
+    proxy_pass http://opscode_erchef;
+  }
+
+  # This variable is set to an empty string here so it can be used in
+  # dispatch.lua later on. An add-on can set this variable to be used as an
+  # upstream if we determine the request was not intended to go to the API.
+  set $add_on_override_upstream "";
+
+  # Include external routes for addons
+  include /var/opt/opscode/nginx/etc/addon.d/*_external.conf;
+
+  location /_route/ {
+    default_type 'application/json';
+    content_by_lua_file '/var/opt/opscode/nginx/etc/scripts/dispatch_route.lua';
+  }
+
+  location / {
+    satisfy any;
+
+    set $mode "api";
+    set $upstream "";
+    rewrite_by_lua_file '/var/opt/opscode/nginx/etc/scripts/dispatch.lua';
+    proxy_pass http://$upstream;
+    proxy_redirect http://$upstream /;
+  }
+}
