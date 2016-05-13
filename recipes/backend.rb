@@ -36,7 +36,7 @@ package 'chef-server-core'
 
 # Unpack the existing files needed
 ## pivotal.pem
-execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/core_bundle.tar.gz " do
+execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/core_bundle.tar.gz etc/opscode/pivotal.pem" do
   action :run
   cwd '/'
   only_if { node['cf_tiered_chef']['install']['existing'] }
@@ -44,6 +44,12 @@ execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/core_bundle.tar.gz " d
 end
 
 ## private-chef-secrets.json
+execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/core_bundle.tar.gz etc/opscode/private-chef-secrets.json" do
+  action :run
+  cwd '/'
+  only_if { node['cf_tiered_chef']['install']['existing'] }
+  only_if { File.exists?("#{node['cf_tiered_chef']['s3']['dir']}/core_bundle.tar.gz") }
+end
 
 # Unpack the reporting files
 execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/reporting_bundle.tar.gz" do
