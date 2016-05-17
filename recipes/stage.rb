@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_tiered_chef
-# Recipe:: certs
+# Recipe:: stage
 #
 # Copyright 2016, Hearst Automation Team
 #
