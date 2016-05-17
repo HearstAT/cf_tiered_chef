@@ -18,7 +18,7 @@ server '<%= node['cf_tiered_chef']['backend']['fqdn'] %>',
 
 backend_vip '<%= node['cf_tiered_chef']['backend_vip']['fqdn'] %>',
   ipaddress: '<%= node['cf_tiered_chef']['backend_vip']['ip_address'] %>',
-  device: 'eth0',
+  device: 'eth0'
 
 api_fqdn '<%= node['cf_tiered_chef']['api_fqdn'] %>'
 
