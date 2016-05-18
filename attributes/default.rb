@@ -33,7 +33,7 @@ default['cf_tiered_chef']['backup']['restore_file'] = ''
 default['cf_tiered_chef']['s3']['dir'] = ''
 
 # SSL Config
-default['cf_tiered_chef']['ssl']['enable'] = false
+default['cf_tiered_chef']['ssl']['enable'] = true
 
 # Manage Attributes
 default['cf_tiered_chef']['manage']['signupdisable'] = ''
