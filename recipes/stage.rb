@@ -56,6 +56,20 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['prime_dom
   notifies :run, 'execute[restart-nginx]', :immediately
 end
 
+template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['prime_domain']}.conf" do
+  source 'site.ssl.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00777
+  variables ({
+    subdomains: [node['cf_tiered_chef']['stage_subdomain']],
+    domain: node['cf_tiered_chef']['prime_domain']
+  })
+  only_if { node['cf_tiered_chef']['ssl']['enabled'] }
+  notifies :run, 'execute[sleep]', :immediately
+  notifies :run, 'execute[restart-nginx]', :immediately
+end
+
 template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['secondary_domain']}.conf" do
   source 'site.conf.erb'
   owner 'root'
@@ -66,6 +80,21 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['secondary
     domain: node['cf_tiered_chef']['secondary_domain']
   })
   only_if { node['cf_tiered_chef']['secondary_domain'] }
+  notifies :run, 'execute[sleep]', :immediately
+  notifies :run, 'execute[restart-nginx]', :immediately
+end
+
+template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['secondary_domain']}.conf" do
+  source 'site.ssl.conf.erb'
+  owner 'root'
+  group 'root'
+  mode 00777
+  variables ({
+    subdomains: ["chef", node['cf_tiered_chef']['stage_subdomain']],
+    domain: node['cf_tiered_chef']['secondary_domain']
+  })
+  only_if { node['cf_tiered_chef']['secondary_domain'] }
+  only_if { node['cf_tiered_chef']['ssl']['enabled'] }
   notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately
 end
