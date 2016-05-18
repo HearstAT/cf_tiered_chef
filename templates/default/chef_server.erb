@@ -29,12 +29,12 @@ oc_id['applications'] = {
   }
 }
 
-<% if node['cf_tiered_chef']['ssl']['enabled'] == true -%>
+<% if node['cf_tiered_chef']['ssl']['enabled'] == true %>
 nginx['ssl_certificate'] = '<%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= node['cf_tiered_chef']['prime_domain'] %>.crt'
 nginx['ssl_certificate_key'] = '<%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= node['cf_tiered_chef']['prime_domain'] %>.key'
 <% end -%>
 
-<% if node['cf_tiered_chef']['ssl']['enabled'] == false -%>
+<% if node['cf_tiered_chef']['ssl']['enabled'] == false %>
 nginx['enable_non_ssl'] = true
 <% end -%>
 
