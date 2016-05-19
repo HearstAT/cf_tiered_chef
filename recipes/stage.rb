@@ -52,6 +52,7 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['prime_dom
     subdomains: [node['cf_tiered_chef']['stage_subdomain']],
     domain: node['cf_tiered_chef']['prime_domain']
   })
+  not_if { node['cf_tiered_chef']['ssl']['enabled'] }
   notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately
 end
@@ -80,6 +81,7 @@ template "/var/opt/opscode/nginx/etc/nginx.d/#{node['cf_tiered_chef']['secondary
     domain: node['cf_tiered_chef']['secondary_domain']
   })
   only_if { node['cf_tiered_chef']['secondary_domain'] }
+  not_if { node['cf_tiered_chef']['ssl']['enabled'] }
   notifies :run, 'execute[sleep]', :immediately
   notifies :run, 'execute[restart-nginx]', :immediately
 end
