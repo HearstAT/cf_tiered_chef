@@ -158,7 +158,7 @@ execute 'chef-server-ctl restart' do
 end
 
 execute 's3-backup-get' do
-  command "cp -f #{node['cf_tiered_chef']['s3']['dir']}/#{node['cf_tiered_chef']['backup']['restore_file']}.tar #{Chef::Config[:file_cache_path]}/backup.tar"
+  command "cp -f #{node['cf_tiered_chef']['s3']['dir']}/backup.tar #{Chef::Config[:file_cache_path]}/backup.tar"
   action :run
   only_if { node['cf_tiered_chef']['backup']['restore'] }
 end
@@ -171,9 +171,17 @@ execute 'backup-extract' do
 end
 
 execute 'knife-backup-restore' do
-  command "/opt/opscode/embedded/bin/knife ec restore #{Chef::Config[:file_cache_path]}/backup -s https://#{node['cf_tiered_chef']['api_fqdn']} --with-user-sql --skip-useracl --concurrency 1"
+  command "/opt/opscode/embedded/bin/knife ec restore #{Chef::Config[:file_cache_path]}/backup -s https://#{node['cf_tiered_chef']['api_fqdn']} --with-user-sql --skip-useracl"
   action :run
   only_if { node['cf_tiered_chef']['backup']['restore'] }
+  not_if { node['cf_tiered_chef']['database']['ext_enable'] }
+end
+
+execute 'knife-backup-restore-ext' do
+  command "/opt/opscode/embedded/bin/knife ec restore #{Chef::Config[:file_cache_path]}/backup -s https://#{node['cf_tiered_chef']['api_fqdn']} --with-user-sql --skip-useracl --sql-host #{node['cf_tiered_chef']['database']['url']}"
+  action :run
+  only_if { node['cf_tiered_chef']['backup']['restore'] }
+  only_if { node['cf_tiered_chef']['database']['ext_enable'] }
 end
 
 # Configure for reporting
