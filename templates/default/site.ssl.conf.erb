@@ -4,8 +4,8 @@ server {
 
   access_log /var/log/opscode/nginx/access.log opscode;
   ssl on;
-  ssl_certificate <%= node['cf_ha_chef']['s3']['dir'] %>/certs/chef.<%= @domain %>.crt;
-  ssl_certificate_key <%= node['cf_ha_chef']['s3']['dir'] %>/certs/chef.<%= @domain %>.key;
+  ssl_certificate <%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= @domain %>.crt;
+  ssl_certificate_key <%= node['cf_tiered_chef']['s3']['dir'] %>/certs/chef.<%= @domain %>.key;
   ssl_dhparam /var/opt/opscode/nginx/ca/dhparams.pem;
 
   ssl_session_timeout 5m;
