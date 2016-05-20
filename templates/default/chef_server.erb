@@ -43,7 +43,7 @@ rabbitmq['node_ip_address'] = '0.0.0.0'
 <% if node['cf_tiered_chef']['cookbook']['ext_enable'] == true %>
 bookshelf['enable'] = false
 bookshelf['vip'] = "S3-<%= node['cf_tiered_chef']['aws']['region'] %>.amazonaws.com"
-bookshelf['external_url'] = "https://s3-<%= node['cf_tiered_chef']['aws']['region'] %>..amazonaws.com"
+bookshelf['external_url'] = "https://s3-<%= node['cf_tiered_chef']['aws']['region'] %>.amazonaws.com"
 bookshelf['access_key_id'] = "<%= node['cf_tiered_chef']['aws_access_key_id'] %>"
 bookshelf['secret_access_key'] = "<%= node['cf_tiered_chef']['aws_secret_access_key'] %>"
 opscode_erchef['s3_bucket'] = "<%= node['cf_tiered_chef']['cookbook']['bucket'] %>"
