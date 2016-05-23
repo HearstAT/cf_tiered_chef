@@ -59,7 +59,7 @@ execute "tar -zxvf #{node['cf_tiered_chef']['s3']['dir']}/reporting_bundle.tar.g
   only_if { File.exists?("#{node['cf_tiered_chef']['s3']['dir']}/reporting_bundle.tar.gz") }
 end
 
-include_recipe 'cf_tiered_chef::ebs_volume'
+include_recipe 'cf_tiered_chef::volume'
 include_recipe 'cf_tiered_chef::disable_iptables'
 if node['cf_tiered_chef']['newrelic']['enable']
   include_recipe 'cf_tiered_chef::newrelic'

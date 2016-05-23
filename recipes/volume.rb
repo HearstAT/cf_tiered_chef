@@ -1,6 +1,6 @@
 #
 # Cookbook Name:: cf_tiered_chef
-# Recipe:: ebs_volume
+# Recipe:: volume
 #
 # Copyright 2016, Hearst Automation Team
 #
@@ -23,19 +23,8 @@
 # OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
-# This recipe configures the EBS volume.
 
-include_recipe 'lvm::default'
-
-lvm_volume_group 'chef' do
-  physical_volumes '/dev/xvdb'
-
-  logical_volume 'data' do
-    size '85%VG'
-    filesystem 'ext4'
-    mount_point '/var/opt/opscode'
-  end
-
-  retries 5
-  retry_delay 30
+mount '/var/opt/opscode' do
+  device '/dev/xvdb'
+  fstype 'ext4'
 end

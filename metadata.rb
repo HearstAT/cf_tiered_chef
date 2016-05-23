@@ -8,7 +8,6 @@ description 'Installs/Configures cf_tiered_chef'
 long_description IO.read(File.join(File.dirname(__FILE__), 'README.md'))
 version '1.0.0'
 
-depends 'lvm'
 depends 'python'
 depends 'citadel'
 depends 'newrelic'
