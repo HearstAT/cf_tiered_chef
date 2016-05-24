@@ -113,30 +113,6 @@ template '/etc/opscode-reporting/opscode-reporting.rb' do
   only_if { node['cf_tiered_chef']['database']['ext_enable'] }
 end
 
-# Create missing keepalived cluster status files
-directory '/var/opt/opscode/keepalived' do
-  action :create
-  owner 'root'
-  group 'root'
-  mode '0755'
-end
-
-file '/var/opt/opscode/keepalived/current_cluster_status' do
-  action :create
-  content 'master'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
-
-file '/var/opt/opscode/keepalived/requested_cluster_status' do
-  action :create
-  content 'master'
-  owner 'root'
-  group 'root'
-  mode '0644'
-end
-
 # Must be run before attempting to install reporting
 execute 'chef-server-ctl reconfigure'
 

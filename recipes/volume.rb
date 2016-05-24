@@ -24,7 +24,15 @@
 # WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #
 
+# create a filesystem
+execute 'mkfs' do
+  command "mkfs -t ext4 /dev/xvdb"
+  not_if "grep -qs /var/opt/opscode /proc/mounts"
+end
+
 mount '/var/opt/opscode' do
   device '/dev/xvdb'
   fstype 'ext4'
+  options 'noatime,nobootwait'
+  action [:enable, :mount]
 end

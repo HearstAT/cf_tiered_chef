@@ -1,3 +1,5 @@
-postgresql['user'] = "<%= node['cf_tiered_chef']['database']['username'] %>"
+postgresql['external'] = true
+postgresql['db_superuser'] = "<%= node['cf_tiered_chef']['database']['username'] %>"
+postgresql['db_superuser_password'] = "<%= node['cf_tiered_chef']['database']['password'] %>"
 postgresql['port'] = <%= node['cf_tiered_chef']['database']['port'] %>
 postgresql['vip'] = "<%= node['cf_tiered_chef']['database']['url'] %>"
